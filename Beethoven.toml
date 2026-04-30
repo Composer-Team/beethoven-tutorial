@@ -1,0 +1,50 @@
+# Beethoven project manifest — analogous to Cargo.toml.
+# The `beethoven` CLI reads this and generates the hidden sbt + cmake builds
+# under target/. Users should not need to edit build.sbt or CMakeLists.txt by hand.
+#
+# Convention: keys that are commented out show their default value. Uncomment
+# only to override.
+
+[project]
+name = "vector_add"
+# version = "0.0.0"            # optional, default "0.0.0"
+version = "0.0.1"
+
+[hardware]
+# src-dir = "hw"               # optional, default "hw"
+
+## Beethoven-Hardware dependency. Provide exactly one of `path` or `version`.
+## `path` source-links a local checkout (good while iterating on the framework);
+## `version` resolves from the maven repo. `path` wins if both are set.
+[hardware.beethoven-hardware]
+path = "../Beethoven-Hardware"
+# version = "0.1.6"
+
+# [software]                   # entire section optional
+# src-dir = "sw"               # default "sw"
+
+[platform]
+## `target` and `build-mode` are orthogonal — any target can be run in either
+## mode. `build-mode = "simulation"` produces a verilator/VCS harness against
+## the chosen target's actual RTL (real bus widths, AXI variant, memory params),
+## which is what you want when verifying protocol/memory-specific behavior.
+## Use target = "simulation" only when you want a fast generic sim harness
+## (SimulationPlatform extends KriaPlatform with sim-tuned constants).
+##
+## Required: deployment target. One of:
+##   simulation | kria | kria2 | aupzu3 | aws-f1 | aws-f2 | u200
+target = "aupzu3"
+## Required: synthesis | simulation
+build-mode = "synthesis"
+
+## Platform-specific parameters. Only the table matching `platform.target` is
+## read. The required keys depend on the chosen target — `aupzu3` needs at
+## minimum `dram-size-gb` (the AUPZU3Platform constructor asserts 4 or 8).
+[platform.aupzu3]
+dram-size-gb = 8
+
+## Build output directory — replaces the BEETHOVEN_PATH env var.
+## All chisel-generated Verilog, beethoven_hardware.{h,cc}, and cmake_srcs.cmake
+## land under <output-dir>/build/. Path is resolved relative to this manifest.
+# [build]                      # entire section optional
+# output-dir = "target"        # default "target"

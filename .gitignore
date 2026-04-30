@@ -1,21 +1,5 @@
-*.class
-*.log
-.memories
+# Beethoven build outputs and sbt compile cache
+target/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-.bloop
-.bsp
-.metals
-.vscode
-project
-SRs
-target
-hw_build
-src/main/c/build
-sed_script.sed
-src/main/c/Beethoven-Software
-*.o
-src/test/c/Beethoven-Software
-build/
-.DS_Store
+# sbt's meta-build compile cache.
+project/
